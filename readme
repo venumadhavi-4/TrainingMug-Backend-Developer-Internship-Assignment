@@ -1,0 +1,153 @@
+Car Management System
+
+A backend application built using Spring Boot to manage car details. The system supports CRUD operations and additional features like global search, pagination, sorting, and API documentation.
+
+Features
+
+Functional Requirements
+
+CRUD Operations:
+
+Create: Add a new car with details like name, model, year, price, color, and fuel type.
+
+Read: View a list of all cars and filter by name, model, or year.
+
+Update: Update details of an existing car.
+
+Delete: Delete a car entry.
+
+Additional Features:
+
+Global Search: Search cars by name, model, year, color, or fuel type.
+
+Pagination & Sorting: Handle large datasets efficiently.
+
+Validation: Ensure all inputs are valid before submission.
+
+API Documentation: Explore the API with Swagger UI.
+
+Technologies Used
+
+Backend: Spring Boot
+
+Database: MySQL
+
+API Documentation: SpringDoc OpenAPI (Swagger)
+
+Deployment: Hosted on AWS/Cloud Platform
+
+Installation & Setup
+
+Prerequisites
+
+Java JDK 17 or above
+
+MySQL Server
+
+Maven
+
+Steps to Run Locally
+
+Clone the Repository:
+
+git clone https://github.com/your-username/car-management-system.git
+cd car-management-system
+
+Configure the Database:
+
+Create a MySQL database named car_management.
+
+Update application.properties with your database credentials:
+
+spring.datasource.url=jdbc:mysql://localhost:3306/car_management
+spring.datasource.username=your-username
+spring.datasource.password=your-password
+spring.jpa.hibernate.ddl-auto=update
+
+Build and Run the Application:
+
+mvn clean install
+mvn spring-boot:run
+
+Access the Application:
+
+Swagger UI: http://localhost:8080/swagger-ui.html
+
+API Endpoints
+
+Car Endpoints
+
+Method
+
+Endpoint
+
+Description
+
+POST
+
+/api/cars
+
+Add a new car
+
+GET
+
+/api/cars
+
+Get a list of all cars
+
+GET
+
+/api/cars/{id}
+
+Get details of a car
+
+PUT
+
+/api/cars/{id}
+
+Update car details
+
+DELETE
+
+/api/cars/{id}
+
+Delete a car
+
+Example JSON Payloads
+
+Add Car (POST /api/cars)
+
+{
+  "name": "Tesla Model S",
+  "model": "Model S",
+  "year": 2022,
+  "price": 80000,
+  "color": "Red",
+  "fuelType": "Electric"
+}
+
+Update Car (PUT /api/cars/{id})
+
+{
+  "name": "Tesla Model X",
+  "model": "Model X",
+  "year": 2023,
+  "price": 90000,
+  "color": "Blue",
+  "fuelType": "Electric"
+}
+
+Deployment
+
+The application is hosted on a cloud platform. Access the live API at:
+Hosted URL
+
+Testing the API
+
+Use Postman or Swagger UI to test the endpoints.
+
+Examples:
+
+Add a car using the POST endpoint.
+
+Retrieve all cars using the GET endpoint.
