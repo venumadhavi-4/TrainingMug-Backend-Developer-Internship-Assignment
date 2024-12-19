@@ -1,0 +1,230 @@
+Here's a step-by-step guide with code snippets and how to generate the output. I'll walk you through the process, including database setup, API implementation, and deployment. Since I cannot provide pictures directly, I'll describe how you can test and capture outputs using tools like **Postman** or **Swagger UI**.
+
+---
+
+### **Step 1: Set Up the Environment**
+1. **Install Required Tools**:
+   - Java (JDK 17+)
+   - Spring Boot CLI or IDE (IntelliJ IDEA, Eclipse)
+   - MySQL or PostgreSQL
+   - Postman (for API testing)
+
+2. **Create a Spring Boot Project**:
+   Use [Spring Initializer](https://start.spring.io/) to generate a Spring Boot project with the following dependencies:
+   - Spring Web
+   - Spring Data JPA
+   - MySQL Driver
+   - Spring Boot DevTools
+   - SpringDoc OpenAPI
+
+---
+
+### **Step 2: Database Setup**
+Create a MySQL database named `car_management`.
+
+```sql
+CREATE DATABASE car_management;
+```
+
+---
+
+### **Step 3: Project Structure**
+
+#### Directory Structure:
+```
+src/main/java/com/car/management
+├── controller
+│   └── CarController.java
+├── model
+│   └── Car.java
+├── repository
+│   └── CarRepository.java
+├── service
+│   └── CarService.java
+├── exception
+│   └── ResourceNotFoundException.java
+└── CarManagementApplication.java
+```
+
+---
+
+### **Step 4: Code Implementation**
+
+#### 1. **Car Entity**
+
+```java
+package com.car.management.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+public class Car {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "Car name is required")
+    private String name;
+
+    @NotBlank(message = "Model is required")
+    private String model;
+
+    @NotNull(message = "Year is required")
+    private Integer year;
+
+    @NotNull(message = "Price is required")
+    private Double price;
+
+    @NotBlank(message = "Color is required")
+    private String color;
+
+    @NotBlank(message = "Fuel type is required")
+    private String fuelType;
+
+    // Getters and Setters
+}
+```
+
+---
+
+#### 2. **Car Repository**
+
+```java
+package com.car.management.repository;
+
+import com.car.management.model.Car;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CarRepository extends JpaRepository<Car, Long> {
+}
+```
+
+---
+
+#### 3. **Car Service**
+
+```java
+package com.car.management.service;
+
+import com.car.management.model.Car;
+import com.car.management.repository.CarRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class CarService {
+
+    @Autowired
+    private CarRepository carRepository;
+
+    public List<Car> getAllCars() {
+        return carRepository.findAll();
+    }
+
+    public Car getCarById(Long id) {
+        return carRepository.findById(id).orElseThrow(() -> new RuntimeException("Car not found"));
+    }
+
+    public Car addCar(Car car) {
+        return carRepository.save(car);
+    }
+
+    public Car updateCar(Long id, Car updatedCar) {
+        Car existingCar = getCarById(id);
+        existingCar.setName(updatedCar.getName());
+        existingCar.setModel(updatedCar.getModel());
+        existingCar.setYear(updatedCar.getYear());
+        existingCar.setPrice(updatedCar.getPrice());
+        existingCar.setColor(updatedCar.getColor());
+        existingCar.setFuelType(updatedCar.getFuelType());
+        return carRepository.save(existingCar);
+    }
+
+    public void deleteCar(Long id) {
+        carRepository.deleteById(id);
+    }
+}
+```
+
+---
+
+#### 4. **Car Controller**
+
+```java
+package com.car.management.controller;
+
+import com.car.management.model.Car;
+import com.car.management.service.CarService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/cars")
+public class CarController {
+
+    @Autowired
+    private CarService carService;
+
+    @GetMapping
+    public List<Car> getAllCars() {
+        return carService.getAllCars();
+    }
+
+    @GetMapping("/{id}")
+    public Car getCarById(@PathVariable Long id) {
+        return carService.getCarById(id);
+    }
+
+    @PostMapping
+    public Car addCar(@RequestBody Car car) {
+        return carService.addCar(car);
+    }
+
+    @PutMapping("/{id}")
+    public Car updateCar(@PathVariable Long id, @RequestBody Car car) {
+        return carService.updateCar(id, car);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCar(@PathVariable Long id) {
+        carService.deleteCar(id);
+    }
+}
+```
+
+---
+
+#### 5. **Swagger Configuration**
+
+Spring Boot automatically generates Swagger UI when you include the `springdoc-openapi` dependency. Access it at `/swagger-ui.html`.
+
+---
+
+### **Step 5: Run and Test**
+
+1. **Run the Project**:
+   - Use the command `mvn spring-boot:run`.
+
+2. **API Testing with Postman**:
+   - **Add Car**: POST `/api/cars`
+   - **Get All Cars**: GET `/api/cars`
+   - **Update Car**: PUT `/api/cars/{id}`
+   - **Delete Car**: DELETE `/api/cars/{id}`
+
+---
+
+### **Step 6: Deployment**
+
+Deploy the project on AWS Elastic Beanstalk or similar platforms. Provide the public URL in your README.
+
+---
+
